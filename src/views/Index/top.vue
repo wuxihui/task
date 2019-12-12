@@ -10,16 +10,83 @@
     </transition>
 
     <img src="@/img/icon-paid.png" id="imgOne" @click="handleRotate" />
-    <!-- <div id="app" v-cloak>
-      <div
-        class="content"
-        ref="contaner"
-        id="contaner"
-        :style="contentStyleObj"
+
+    <div class="form-group" v-for="(item, i) in goodList" :key="i">
+      <select class="form-control" v-model="goodList[i].web">
+        <option
+          v-for="(option, index) in relationList"
+          :key="index"
+          :value="option.id"
+          >{{ option.typename }}
+        </option>
+      </select>
+      <input type="text" v-model="goodList[i].num" placeholder="请添加数量" />
+      <span @click="deletes(i)" style="margin-left: 20px; color: #E53F24;"
+        >删除</span
       >
-        当前元素
+    </div>
+    <span @click="add" style="margin-left: 500px;">添加</span>
+    <!-- <div v-for="(v, i) in list" :key="i">
+      <div
+        class="form-group  m-form__group row"
+        style="padding-top: 15px;padding-bottom: 15px;"
+      >
+        <label class="col-form-label col-lg-2 col-sm-12"
+          >联系人类型 <span style="color: #F00">*</span>
+        </label>
+        <div class="col-lg-3">
+          <select
+            class="form-control m-input&#45;&#45;fixed"
+            v-model="list[i].contactType"
+          >
+            <option
+              v-for="(option, index) in contacttype_arr"
+              :key="index"
+              :value="option.id"
+              >{{ option.typename }}
+            </option>
+          </select>
+        </div>
+        <label class="col-form-label col-lg-2 col-sm-12">
+          数量<span style="color: #F00">*</span></label
+        >
+        <div class="col-lg-3">
+          <input
+            type="text"
+            v-model="list[i].number"
+            class="form-control m-input&#45;&#45;fixed"
+            placeholder=""
+          />
+        </div>
+        <div class="col-lg-2">
+          <div
+            data-repeater-delete=""
+            v-on:click="deleteNode(i)"
+            style="margin-left: 35px;"
+            class="btn-sm btn btn-danger m-btn m-btn&#45;&#45;icon m-btn&#45;&#45;pill"
+          >
+            <span>
+              <span> 删除 </span>
+            </span>
+          </div>
+        </div>
       </div>
-      <input type="button" value="动画" @click="test" />
+    </div>
+    <div class="m-form__group form-group row">
+      <label class="col-lg-4 col-form-label"
+        >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label
+      >
+      <div class="col-lg-4" v-on:click="addNode()">
+        <div
+          data-repeater-create=""
+          style="text-align: center"
+          class="btn btn btn-sm btn-brand m-btn m-btn--icon m-btn--pill m-btn--wide"
+        >
+          <span>
+            <span> 添加 </span>
+          </span>
+        </div>
+      </div>
     </div> -->
   </div>
 </template>
@@ -29,14 +96,45 @@ export default {
   data() {
     return {
       flag: false,
-      // current: 0,
       contentStyleObj: {
         height: "",
         width: ""
-      }
+      },
+      goodList: [{ web: "", num: "" }],
+      relationList: [
+        { id: 1, typename: "家人" },
+        { id: 2, typename: "朋友" },
+        { id: 3, typename: "同学" }
+      ],
+      contacttype_arr: [
+        { id: 1, typename: "家人" },
+        { id: 2, typename: "朋友" },
+        { id: 3, typename: "同事" }
+      ],
+      //联系人类型数组
+      list: [{ contactType: "", number: "" }]
     };
   },
   methods: {
+    //添加标本div
+    addNode: function() {
+      this.list.push({ contactType: "", number: "" });
+    },
+    //删除样本div
+    deleteNode: function(i) {
+      this.list.splice(i, 1); //删除index为i,位置的数组元素
+    },
+
+    //删除
+    deletes(i) {
+      this.goodList.splice(i, 1);
+    },
+
+    //增加
+    add() {
+      this.goodList.push({ web: "", num: "" });
+    },
+
     beforeEnter(el) {
       el.style.transform = "translate(0, 0)";
     },
@@ -82,44 +180,12 @@ export default {
             .slice(r, len)
             .match(/\d{3}/g)
             .join(",");
-    },
-    
-
-
-
-    // getHeight() {
-    //   let main = document.getElementById("contaner");
-
-    //   // 获取浏览器高度，减去顶部导航栏的值，70该值也可以动态获取
-    //   // this.contentStyleObj.height = window.innerHeight - 70 + "px";
-    //   // this.contentStyleObj.width = window.innerWidth - 250 + "px";
-    //   // this.contentStyleObj.height = main.offsetHeight + "px";
-    //   // this.contentStyleObj.width = main.offsetWidth + "px";
-    // },
-    // test() {
-    //   let container = document.getElementById("contaner");
-    //   //console.log(document.getElementById("contaner"));
-    //   let Height = container.offsetHeight + "px";
-    //   let Width = container.offsetWidth + "px";
-    //   console.log(Height, Width);
-    // }
+    }
   }
-  // created() {
-  //   window.addEventListener("resize", this.getHeight);
-  //   this.getHeight();
-  //   console.log(this.contentStyleObj);
-  // },
-
-  // destroyed() {
-  //   window.removeEventListener("resize", this.getHeight);
-  // }
 };
 </script>
 
 <style scoped lang="less">
-// .content {
-//   margin: 500px 0 0 400px;
-// }
 .ball {
   width: 30px;
   height: 30px;
@@ -127,7 +193,4 @@ export default {
   border-radius: 50%;
   background: red;
 }
-// input {
-//   margin-left: 200px;
-// }
 </style>
