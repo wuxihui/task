@@ -27,6 +27,9 @@ export default {
     //   background: #247bb4 !important;
     // }
   },
+  created() {
+    console.log(525235);
+  },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
